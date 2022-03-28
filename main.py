@@ -1,3 +1,4 @@
+import json
 import requests
 from bs4 import BeautifulSoup
 
@@ -22,11 +23,16 @@ with open("index.html") as file:
 
 soup = BeautifulSoup(src, "lxml")
 
-pagination_links = soup.find_all(class_ = "pagination__numeral")
+
+pagination_links = soup.find_all("a", class_ = "eo-product-card__image-wrapper")
 
 
-
+all_products_dict = {}
 for item in pagination_links:
-    item_href = "" + item.get("href")
+    item_href = "https://www.express-office.ru" + item.get("href")
+    item_img_url = "https://www.express-office.ru" + item.get("url")
 
-    print(item_href)
+    all_products_dict[item_href] = item_img_url
+
+with open("all_products_dict.json", "w") as file:
+    json.dump(all_products_dict, file, indent=4, ensure_ascii=False)
